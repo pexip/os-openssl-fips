@@ -1,0 +1,5 @@
+openssl-fips (2.0.5-1) pexip; urgency=low
+
+  * Initial release 
+
+ -- John-Mark Bell <jmb@pexip.com>  Tue, 14 Jan 2014 16:47:42 +0000

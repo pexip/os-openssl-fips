@@ -1,0 +1,14 @@
+Source: openssl-fips
+Priority: optional
+Maintainer: Pexip AS <packaging@pexip.com>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.2
+Section: libs
+
+Package: libssl-fips-dev
+Section: libdevel
+Priority: optional
+Architecture: any
+Depends: ${misc:Depends}
+Description: FIPS 140-2 certified module for OpenSSL.
+

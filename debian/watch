@@ -1,0 +1,2 @@
+version=3
+http://www.openssl.org/source/ openssl-fips-([.0-9]*)\.tar\.gz
