@@ -1,0 +1,20 @@
+This FIPS 140-2 validated cryptographic module (Certificate #1747)
+was built at Tue Jan 14 16:36:35 UTC 2014 on PexOS 1.0 running on x86_64 using 
+gcc 4.6.3.
+
+It was built from the unmodified contents of openssl-fips-2.0.5.tar.gz as 
+received on physical media from the OpenSSL Foundation and identified
+by the HMAC-SHA-1 digest 8b44f2a43d098f6858eb1ebe77b73f8f027a9c29.
+
+The module was unpacked and built using command set U2 as specified in
+the Security Policy document:
+
+    gunzip -c openssl-fips-2.0.5.tar.gz | tar xf -
+    ./config
+    make
+    make install
+
+No other build-time options were specified.
+
+The resulting binary cryptographic module carries the HMAC-SHA-1 digest
+c94a886dc8260883739f51208f3192bed54d5e0c.
