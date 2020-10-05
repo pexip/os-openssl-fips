@@ -1,15 +1,15 @@
-This FIPS 140-2 validated cryptographic module (Certificate #1747)
-was built at Tue Jan 14 16:36:35 UTC 2014 on PexOS 1.0 running on x86_64 using 
-gcc 4.6.3.
+This FIPS 140-2 validated cryptographic module (Certificate #3503)
+was built at Mon 05 Oct 2020 03:42:42 PM UTC on PexOS 1.0 running on x86_64 using
+gcc 8.3.0.
 
-It was built from the unmodified contents of openssl-fips-2.0.5.tar.gz as 
-received on physical media from the OpenSSL Foundation and identified
-by the HMAC-SHA-1 digest 8b44f2a43d098f6858eb1ebe77b73f8f027a9c29.
+It was built from the unmodified contents of OpenSSL_2.0.13_OracleFIPS_1.0.tar.gz as
+downloaded from https://github.com/oracle/solaris-openssl-fips/releases/download/v1.0/OpenSSL_2.0.13_OracleFIPS_1.0.tar.gz
+and identified by the HMAC-SHA-1 digest ef8f7a91979cad14d033d8803a89fdf925102a30.
 
-The module was unpacked and built using command set U2 as specified in
+The module was unpacked and built using the commands specified in
 the Security Policy document:
 
-    gunzip -c openssl-fips-2.0.5.tar.gz | tar xf -
+    tar -zxf OpenSSL_2.0.13_OracleFIPS_1.0.tar.gz
     ./config
     make
     make install
@@ -17,4 +17,4 @@ the Security Policy document:
 No other build-time options were specified.
 
 The resulting binary cryptographic module carries the HMAC-SHA-1 digest
-c94a886dc8260883739f51208f3192bed54d5e0c.
+c0f8a2dc097fe76e801fd61fb37d823cb3bb869a.

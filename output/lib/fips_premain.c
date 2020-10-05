@@ -4,9 +4,13 @@
  * OpenSSL license.
  */
 
+#ifdef __linux__
+#define _GNU_SOURCE
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <dlfcn.h>
 #if defined(__unix) || defined(__unix__) || defined(__vxworks) || defined(__ANDROID__) || defined(__APPLE__)
 #include <unistd.h>
 #endif
@@ -14,7 +18,7 @@
 #ifndef FINGERPRINT_PREMAIN_DSO_LOAD
 
 #if defined(__GNUC__) && __GNUC__>=2
-  void FINGERPRINT_premain(void) __attribute__((constructor));
+  void FINGERPRINT_premain(void) __attribute__((constructor (101)));
   /* Most commonly this results in pointer to premain to be dropped
    * to .ctors segment, which is traversed by GCC crtbegin.o upon
    * program startup. Except on a.out OpenBSD where it results in
@@ -87,6 +91,8 @@ extern const void         *FIPS_text_start(),  *FIPS_text_end();
 extern const unsigned char FIPS_rodata_start[], FIPS_rodata_end[];
 extern unsigned char       FIPS_signature[20];
 extern unsigned int        FIPS_incore_fingerprint(unsigned char *,unsigned int);
+extern int                 FIPS_module_mode_set(int onoff, const char *auth);
+extern int                 solaris_fips_OPENSSL_init(void);
 
 /*
  * As name suggests this code is executed prior main(). We use this
@@ -97,6 +103,8 @@ void FINGERPRINT_premain(void)
 { unsigned char sig[sizeof(FIPS_signature)];
   const unsigned char * volatile p=FINGERPRINT_ascii_value;
   unsigned int len=sizeof(sig),i;
+  int fips_enabled;
+  int (*_fips_config_check)(void);
 
     /* "volatilization" is done to disengage unwanted optimization... */
     if (*((volatile unsigned char *)p)=='?')
@@ -140,6 +148,35 @@ void FINGERPRINT_premain(void)
 	}
 #endif
     } while(0);
+#if defined(__powerpc__) || defined(__ppc__) || defined(_ARCH_PPC)
+    fips_openssl_cpuid_setup();
+#endif
+
+    /*
+     * If the OS provides _fips_config_check(), call the function to check
+     * the mode of the operation configured.
+     * Note: the function is not defined in Solaris, so Solaris will always
+     * enable the FIPS mode by default.
+     */
+    fips_enabled  = 1; /* by default, it is enabled */
+    _fips_config_check = (int (*)())dlsym(RTLD_DEFAULT, "_fips_config_check");
+    if (_fips_config_check) {
+        fips_enabled = _fips_config_check();
+    }
+
+    if (fips_enabled) {
+        /* enable FIPS mode by default */
+        if (solaris_fips_OPENSSL_init() != 1) {
+            fprintf(stderr, "Failed to set FIPS mode.\n");
+            abort();
+        }
+    } else {
+        /*
+         * Call FIPS_module_mode_set(0) to indicate that the FIPS mode was
+         * false when the module is loaded and POST was not executed.
+         */
+        (void) FIPS_module_mode_set(0, NULL);
+    }
 }
 
 #else
